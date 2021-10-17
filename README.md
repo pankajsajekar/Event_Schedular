@@ -10,7 +10,7 @@ cd Event_Schedular
 ```
 ### create virtual environment
 ```
-python3 -m venv venv
+py -m venv venv
 ```
 ```
 .\venv\Scripts\activate
