@@ -8,7 +8,7 @@ git clone  https://github.com/pankajsajekar/Event_Schedular.git
 ```
 cd Event_Schedular
 ```
-### create virtual environment
+create virtual environment
 ```
 py -m venv venv
 ```
