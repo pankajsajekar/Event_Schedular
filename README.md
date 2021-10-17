@@ -1,6 +1,6 @@
 # Event Calendar in Django
 
-
+### python is required
 ## Steps to Setup Web App
 ```
 git clone  https://github.com/pankajsajekar/Event_Schedular.git
