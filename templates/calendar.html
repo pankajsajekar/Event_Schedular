@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Event Calendar{% endblock title %}
+{% block extracss %}
+<link href="{% static 'calender/main.css' %}" rel="stylesheet" />
+{% endblock extracss %}
+{% block content %}
+<div class="text-center mt-5 mb-3">
+    
+    <h2>Event Shedular</h2>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="tile row">
+            <div class="col-md">
+                <div id="calendar"></div>
+            </div>
+            <div class="modal fade show" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header " style="background-color:#17a2b8;">
+                            <h5 class="modal-title text-white" id="exampleModalLongTitle">Add New Event</h5>
+                            <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="recipient-name" class="col-form-label">Event Title:</label>
+                                    {{ form.title }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">Start Date:</label>
+                                    {{ form.start_time }}
+                                </div>
+                                <div class="form-group">
+                                    <label for="message-text" class="col-form-label">End Date:</label>
+                                    {{ form.end_time }}
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button id="modalClose2" type="button" class="btn btn-secondary">Close</button>
+                                <button type="submit" class="btn btn-info">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+{% block extrascripts %}
+<script src="{% static 'calender/main.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    var today = new Date();
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridDay,list'
+        },
+        initialDate: today,
+        navLinks: true, // can click day/week names to navigate views
+        selectable: true,
+        selectMirror: true,
+        select: function(arg) {
+            console.log('clicked')
+            var modal = document.getElementById('eventModal')
+            modal.style.display = 'block'
+            calendar.unselect()
+        },
+        eventClick: function(arg) {
+                window.location.replace("{%url 'editevent' 1 %}".replace('1',arg.event.id));
+            
+        },
+        editable: true,
+        dayMaxEvents: true, // allow "more" link when too many events
+        events: {{ events | safe }},
+
+    });
+
+    calendar.render();
+});
+const closeBtn1 = document.getElementById('modalClose1');
+const closeBtn2 = document.getElementById('modalClose2');
+closeBtn1.addEventListener('click', () => {
+    const eventModal = document.getElementById('eventModal')
+    eventModal.style.display = 'none';
+});
+closeBtn2.addEventListener('click', () => {
+    const eventModal = document.getElementById('eventModal')
+    eventModal.style.display = 'none';
+});
+</script>
+{% endblock extrascripts %}
